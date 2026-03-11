@@ -17,7 +17,7 @@ sv_contact ""
 
 // If 0, that server is exposed to the Internet. If 1, that server is restricted
 // to your LAN (Local Area Network)
-sv_lan 1
+sv_lan 0
 
 // If empty, anyone can join this server. If non-empty, this is the password
 // players will have to type in order to join your server.
