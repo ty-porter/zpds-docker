@@ -1,1 +1,12 @@
-docker run -d -p 27016:27016/udp -p 27015:27015/tcp -p 27005:27005/udp -p 26900:26900/udp --env-file .env --name zp-server zp-server
+@echo off
+
+docker rm -f zp-server 2>nul
+
+docker run -d ^
+  -p 27016:27016/udp ^
+  -p 27015:27015/tcp ^
+  -p 27005:27005/udp ^
+  -p 26900:26900/udp ^
+  --env-file .env ^
+  --name zp-server ^
+  zp-server
