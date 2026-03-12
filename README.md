@@ -9,6 +9,8 @@ Docker setup for running a [Zombie Panic!](https://store.steampowered.com/app/38
 
 ## Setup
 
+### Environment Variables
+
 Copy `.env.sample` to `.env` and fill in your values:
 
 ```bash
@@ -19,25 +21,24 @@ cp .env.sample .env
 |------------------|---------------------------------------|-----------|
 | `STEAM_USERNAME` | Steam username                        |           |
 | `STEAM_PASSWORD` | Steam password                        |           |
+| `RCON_PASSWORD`  | RCON password (server administration) | `""`      |
 | `GAME`           | Game mod directory name               | `zp`      |
 | `APP_ID`         | Steam App ID for the dedicated server | `3825360` |
 
-## Usage
+### Server Config
 
-Build the image:
+Copy `server.cfg.sample` to `server.cfg` and fill in values:
 
 ```bash
-docker build -t zp-server .
+cp server.cfg.sample server.cfg
 ```
 
-Start the server:
+## Usage
+
+Credentials are passed as Docker build secrets and are never stored in the image. Docker Compose loads `.env` automatically.
 
 ```bash
-# Windows
-run.bat
-
-# Linux/macOS
-bash run.sh
+docker compose up --build
 ```
 
 The server runs on the following ports:

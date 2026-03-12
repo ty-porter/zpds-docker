@@ -1,6 +1,8 @@
 import socket
 
-SERVER = ("127.0.0.1", 27015)
+HOST = "127.0.0.1"
+PORT = 27016
+SERVER = (HOST, PORT)
 
 # A2S_INFO query packet
 query = b"\xFF\xFF\xFF\xFFTSource Engine Query\x00"

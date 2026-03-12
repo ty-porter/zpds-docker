@@ -1,0 +1,27 @@
+secrets:
+  steam_username:
+    environment: STEAM_USERNAME
+  steam_password:
+    environment: STEAM_PASSWORD
+  sv_password:
+    environment: SV_PASSWORD
+  rcon_password:
+    environment: RCON_PASSWORD
+
+services:
+  zp-server:
+    build:
+      context: .
+      args:
+        GAME: ${GAME:-zp}
+        APP_ID: ${APP_ID:-3825360}
+      secrets:
+        - steam_username
+        - steam_password
+        - rcon_password
+        - sv_password
+    ports:
+      - "27016:27016/udp"
+      - "27015:27015/tcp"
+      - "27005:27005/udp"
+      - "26900:26900/udp"

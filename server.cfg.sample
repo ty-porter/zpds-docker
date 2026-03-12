@@ -8,7 +8,7 @@
 
 // This is the name of your server as it will appear in the server browser and
 // in in-game elements.
-hostname "| super pawptart | Zombie Panic!"
+hostname "Zombie Panic! Dedicated Server"
 
 // This is the contact information of the server's owner, could be an email
 // address, an URL to a website or anything else. This field is optional and is
@@ -21,7 +21,8 @@ sv_lan 0
 
 // If empty, anyone can join this server. If non-empty, this is the password
 // players will have to type in order to join your server.
-sv_password ""
+// Do not edit this -- the Docker container will fill in for you.
+sv_password $SV_PASSWORD$
 
 // Defines in which region of the world your server is hosted. The default value
 // of 255 (World) is not recommended because your server won't show in Steam's
@@ -99,7 +100,7 @@ sv_testmode 0
 // server's console, you will need to access directly said console or use a
 // third-party solution such as AMX Mod X. If non-empty, this feature is enabled
 // and also defines the password to access RCON.
-rcon_password ""
+rcon_password $RCON_PASSWORD$
 
 // Time in minutes to ban people who fail RCON authentication. "0" means
 // "permanent".
