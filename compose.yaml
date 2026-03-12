@@ -21,7 +21,7 @@ services:
         - rcon_password
         - sv_password
     command:
-      - -game zp +port 27016 +maxplayers 16 -secure +map zp_clubzombo
+      - -game zp +port 27016 +maxplayers 16 -secure +map zp_thelabs
     ports:
       - "27016:27016/udp"
       - "27015:27015/tcp"

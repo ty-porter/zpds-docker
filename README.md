@@ -34,6 +34,14 @@ Copy `server.cfg.sample` to `server.cfg` and fill in values:
 cp server.cfg.sample server.cfg
 ```
 
+### Metamod-P / AMX Mod X Config
+
+The server installs Metamod-P by default and runs AMX Mod X as a plugin.
+
+You can supply `.ini` or `.cfg` files (such as to enable server administrators) for AMX Mod X in `amxmodx/configs` which will be copied to the correct AMX Mod X directories.
+
+See https://www.amxmodx.org/ for details.
+
 ## Usage
 
 Credentials are passed as Docker build secrets and are never stored in the image. Docker Compose loads `.env` automatically.

@@ -1,3 +1,5 @@
 .env
 server.cfg
+amxmodx/configs/*.ini
+amxmodx/configs/*.cfg
 tmp/

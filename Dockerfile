@@ -62,16 +62,17 @@ RUN --mount=type=secret,id=steam_username \
 RUN mkdir -p /home/steam/.steam/sdk32 && \
     cp ${STEAMCMD_DIR}/linux32/steamclient.so /home/steam/.steam/sdk32/steamclient.so && \
     printf '%s\n' "${APP_ID}" > ${SERVER_DIR}/steam_appid.txt && \
-    chmod 444 ${SERVER_DIR}/steam_appid.txt && \
-    chown -R steam:steam ${SERVER_DIR} /home/steam/.steam
+    chmod 444 ${SERVER_DIR}/steam_appid.txt
 
 # Install Metamod-P into server addons
 RUN mkdir -p ${ADDONS_DIR} ${SERVER_DIR}/tmp ${METAMOD_DIR}/dlls && \
-    curl -sL https://downloads.sourceforge.net/project/metamod-p/Metamod-P%20Binaries/1.21p37/metamod-p-1.21p37-linux_i686.tar.gz \
-    | tar -C ${SERVER_DIR}/tmp -zxvf - && \
+    curl -sL https://github.com/Bots-United/metamod-p/releases/download/v1.21p38/metamod_i686_linux_win32-1.21p38.tar.xz \
+    | tar -C ${SERVER_DIR}/tmp -xvJf - && \
     cp ${SERVER_DIR}/tmp/metamod.so ${METAMOD_DIR}/dlls && \
     rm -rf ${SERVER_DIR}/tmp && \
-    sed -i 's|gamedll_linux "dlls/zp.so"|gamedll_linux "addons/metamod/dlls/metamod.so"|' ${SERVER_DIR}/zp/liblist.gam
+    sed -i 's|gamedll_linux "dlls/zp.so"|gamedll_linux "addons/metamod/dlls/metamod.so"|' ${SERVER_DIR}/zp/liblist.gam && \
+    touch ${METAMOD_DIR}/config.ini && \
+    printf 'gamedll %s/zp/dlls/zp.so' ${SERVER_DIR} > ${METAMOD_DIR}/config.ini
 
 # Install AMX Mod X into server addons
 RUN mkdir -p ${ADDONS_DIR} ${SERVER_DIR}/tmp && \
@@ -80,20 +81,23 @@ RUN mkdir -p ${ADDONS_DIR} ${SERVER_DIR}/tmp && \
     cp -r ${SERVER_DIR}/tmp/addons/amxmodx ${ADDONS_DIR} && \
     rm -rf ${SERVER_DIR}/tmp && \
     touch ${METAMOD_DIR}/plugins.ini && \
-    echo "linux addons/amxmodx/dlls/amxmodx_mm_i386.so" > ${METAMOD_DIR}/plugins.ini
+    printf "linux %s/dlls/amxmodx_mm_i386.so" ${AMXMODX_DIR} > ${METAMOD_DIR}/plugins.ini
 
+RUN chown -R steam:steam ${SERVER_DIR} /home/steam/.steam
+
+COPY amxmodx/configs ${AMXMODX_DIR}/configs
 COPY entrypoint.sh /entrypoint.sh
 COPY server.cfg /server.cfg
-
-# Copy the server config
-RUN cp /server.cfg ${SERVER_DIR}/zp/server.cfg && \
-    ln -sf zp/server.cfg ${SERVER_DIR}/startup_server.cfg && \
-    chmod +x /entrypoint.sh
 
 RUN --mount=type=secret,id=rcon_password \
     --mount=type=secret,id=sv_password \
     sed -i "s|{{RCON_PASSWORD}}|$(cat /run/secrets/rcon_password)|g" /server.cfg && \
     sed -i "s|{{SV_PASSWORD}}|$(cat /run/secrets/sv_password)|g" /server.cfg
+
+# Copy the server config
+RUN cp /server.cfg ${SERVER_DIR}/zp/server.cfg && \
+    ln -sf zp/server.cfg ${SERVER_DIR}/startup_server.cfg && \
+    chmod +x /entrypoint.sh
 
 USER steam
 
