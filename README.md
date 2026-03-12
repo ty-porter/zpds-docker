@@ -17,13 +17,14 @@ Copy `.env.sample` to `.env` and fill in your values:
 cp .env.sample .env
 ```
 
-| Variable         | Description                           | Default   |
-|------------------|---------------------------------------|-----------|
-| `STEAM_USERNAME` | Steam username                        |           |
-| `STEAM_PASSWORD` | Steam password                        |           |
-| `RCON_PASSWORD`  | RCON password (server administration) | `""`      |
-| `GAME`           | Game mod directory name               | `zp`      |
-| `APP_ID`         | Steam App ID for the dedicated server | `3825360` |
+| Variable         | Description                           | Default   | Secret?            |
+|------------------|---------------------------------------|-----------|--------------------|
+| `STEAM_USERNAME` | Steam username                        | REQUIRED  | :heavy_check_mark: |
+| `STEAM_PASSWORD` | Steam password                        | REQUIRED  | :heavy_check_mark: |
+| `SV_PASSWORD`    | Server password                       | `""`      | :heavy_check_mark: |
+| `RCON_PASSWORD`  | RCON password (server administration) | `""`      | :heavy_check_mark: |
+| `GAME`           | Game mod directory name               | `zp`      |                    |
+| `APP_ID`         | Steam App ID for the dedicated server | `3825360` |                    |
 
 ### Server Config
 
