@@ -7,6 +7,11 @@ Docker setup for running a [Zombie Panic!](https://store.steampowered.com/app/38
 - Docker
 - A Steam account with HL1 and Zombie Panic! required — anonymous login does NOT work!
 
+---------------
+> [!WARNING]  
+> Your Steam account must have Steam Guard disabled. This is inherently dangerous. Use it at your own risk!
+---------------
+
 ## Setup
 
 ### Environment Variables
