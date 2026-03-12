@@ -27,3 +27,9 @@ services:
       - "27015:27015/tcp"
       - "27005:27005/udp"
       - "26900:26900/udp"
+    volumes:
+      - server-data:/opt/steam/server
+    restart: unless-stopped
+
+volumes:
+  server-data:
