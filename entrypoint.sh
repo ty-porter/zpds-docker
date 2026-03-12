@@ -1,12 +1,7 @@
 #!/bin/bash
 set -e
 
-export STEAM_RUNTIME_DIR=/opt/steam/steam-runtime
-export LD_LIBRARY_PATH=/opt/steam/steam-runtime/i386/lib/i386-linux-gnu:/opt/steam/steam-runtime/i386/usr/lib/i386-linux-gnu:$LD_LIBRARY_PATH
-export HOME=/home/steam
-
-cp /server.cfg /opt/steam/server/zp/server.cfg
-ln -sf zp/server.cfg /opt/steam/server/startup_server.cfg
+export LD_LIBRARY_PATH=$STEAM_RUNTIME_DIR/i386/lib/i386-linux-gnu:$STEAM_RUNTIME_DIR/i386/usr/lib/i386-linux-gnu:$LD_LIBRARY_PATH
 
 echo "Launching server..."
 
