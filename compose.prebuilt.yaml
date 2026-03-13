@@ -1,13 +1,3 @@
-secrets:
-  steam_username:
-    environment: STEAM_USERNAME
-  steam_password:
-    environment: STEAM_PASSWORD
-  sv_password:
-    environment: SV_PASSWORD
-  rcon_password:
-    environment: RCON_PASSWORD
-
 services:
   fastdl:
     image: nginx:alpine
@@ -19,16 +9,7 @@ services:
     restart: unless-stopped
 
   zp-server:
-    build:
-      context: .
-      args:
-        GAME: ${GAME:-zp}
-        APP_ID: ${APP_ID:-3825360}
-      secrets:
-        - steam_username
-        - steam_password
-        - rcon_password
-        - sv_password
+    image: ${IMAGE}
     command:
       - -game zp +port 27016 +maxplayers 16 -secure +map zp_thelabs
     ports:

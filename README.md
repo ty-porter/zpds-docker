@@ -49,10 +49,20 @@ See https://www.amxmodx.org/ for details.
 
 ## Usage
 
+### Building from source
+
 Credentials are passed as Docker build secrets and are never stored in the image. Docker Compose loads `.env` automatically.
 
 ```bash
 docker compose up --build
+```
+
+### Using a pre-built image
+
+If you have a pre-built image (e.g. pulled from a registry), use `compose.prebuilt.yaml` — no Steam credentials required:
+
+```bash
+IMAGE=your-registry/zpds:latest docker compose -f compose.prebuilt.yaml up
 ```
 
 The server runs on the following ports:
@@ -63,6 +73,7 @@ The server runs on the following ports:
 | 27015 | TCP      | RCON / queries  |
 | 27005 | UDP      | Steam           |
 | 26900 | UDP      | Steam           |
+| 8080  | TCP      | FastDL (HTTP)   |
 
 ## Configuration
 
@@ -75,3 +86,15 @@ python query-server.py
 ```
 
 Sends an A2S_INFO query to `127.0.0.1:27015` and prints the response.
+
+## FastDL
+
+A FastDL service (nginx) is included and starts alongside the game server. It serves the game content directory over HTTP on port 8080, allowing clients to download custom maps, models, and sounds without impacting server performance.
+
+To enable it, set `sv_downloadurl` in `server.cfg` before building:
+
+```
+sv_downloadurl "http://YOUR_SERVER_IP:8080/"
+```
+
+The trailing slash is required.

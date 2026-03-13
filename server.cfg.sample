@@ -69,6 +69,7 @@ sv_allowupload 0
 // This CVAR (Console VARiable) defines the URL of said FastDL server. If you
 // don't want to host custom content and only official one, you can leave this
 // empty.
+// Example: sv_downloadurl "http://YOUR_SERVER_IP:8080/"
 sv_downloadurl ""
 
 //
