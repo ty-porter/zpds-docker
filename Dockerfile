@@ -83,8 +83,6 @@ RUN mkdir -p ${ADDONS_DIR} ${SERVER_DIR}/tmp && \
     touch ${METAMOD_DIR}/plugins.ini && \
     printf "linux %s/dlls/amxmodx_mm_i386.so" ${AMXMODX_DIR} > ${METAMOD_DIR}/plugins.ini
 
-RUN chown -R steam:steam ${SERVER_DIR} /home/steam/.steam
-
 COPY amxmodx/configs ${AMXMODX_DIR}/configs
 COPY entrypoint.sh /entrypoint.sh
 COPY server.cfg /server.cfg
@@ -94,10 +92,16 @@ RUN --mount=type=secret,id=rcon_password \
     sed -i "s|{{RCON_PASSWORD}}|$(cat /run/secrets/rcon_password)|g" /server.cfg && \
     sed -i "s|{{SV_PASSWORD}}|$(cat /run/secrets/sv_password)|g" /server.cfg
 
+COPY workshop/ workshop/
+
 # Copy the server config
 RUN cp /server.cfg ${SERVER_DIR}/zp/server.cfg && \
     ln -sf zp/server.cfg ${SERVER_DIR}/startup_server.cfg && \
-    chmod +x /entrypoint.sh
+    chmod +x /entrypoint.sh workshop/install-items.sh && \
+    # Create the workshop items file if one isn't created.
+    touch workshop/items.txt
+
+RUN chown -R steam:steam ${SERVER_DIR} /home/steam/.steam
 
 USER steam
 
