@@ -11,7 +11,7 @@ services:
   zp-server:
     image: ${IMAGE}
     command:
-      - -game zp +port 27016 +maxplayers 16 -secure +map zp_thelabs
+      - -game zp +port 27016 +maxplayers 16 -secure +map zp_thelabs -wadautodetect
     ports:
       - "27016:27016/udp"
       - "27015:27015/tcp"
