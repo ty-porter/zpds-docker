@@ -27,26 +27,27 @@ ${STEAMCMD_DIR}/steamcmd.sh \
   ${workshop_args[@]} \
   +logout \
   +quit
-
-# Collect all WADs across all workshop items first
-all_wads=()
-while IFS= read -r wad; do
-  all_wads+=("zp/$(basename "$wad")")
-done < <(find "${SERVER_DIR}/steamapps/workshop/content/${APP_ID}" -maxdepth 2 -name "*.wad")
-
-# Copy all workshop content into the game directory
+  
+# Copy all workshop content into the game directory and generate .res files for WADs
 for item_dir in ${SERVER_DIR}/steamapps/workshop/content/${APP_ID}/*/; do
   cp -r "${item_dir}." "${SERVER_DIR}/zp/"
-done
 
-# For every map, add all workshop WADs to its .res file
-for bsp in "${SERVER_DIR}/zp/maps/"*.bsp; do
-  [[ -f "$bsp" ]] || continue
-  map=$(basename "$bsp" .bsp)
-  res_file="${SERVER_DIR}/zp/maps/${map}.res"
-  for wad in "${all_wads[@]}"; do
-    grep -qxF "$wad" "$res_file" 2>/dev/null || echo "$wad" >> "$res_file"
-  done
+  # For each BSP in this item, create a .res file listing any WADs bundled with it
+  wads=()
+  while IFS= read -r wad; do
+    wads+=("zp/$(basename "$wad")")
+  done < <(find "$item_dir" -maxdepth 1 -name "*.wad")
+
+  if [[ ${#wads[@]} -gt 0 ]]; then
+    for bsp in "$item_dir"maps/*.bsp; do
+      [[ -f "$bsp" ]] || continue
+      map=$(basename "$bsp" .bsp)
+      res_file="${SERVER_DIR}/zp/maps/${map}.res"
+      for wad in "${wads[@]}"; do
+        grep -qxF "$wad" "$res_file" 2>/dev/null || echo "$wad" >> "$res_file"
+      done
+    done
+  fi
 done
 
 # Add all the maps to the rotation and maplist
