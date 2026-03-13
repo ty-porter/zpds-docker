@@ -51,7 +51,7 @@
 3626485486 ; zp_ruins - Classic
 3642299121 ; zp_crackhouse
 3643095248 ; zp_highsociety
-3643902144 ; zp_hszombies
+; 3643902144 ; zp_hszombies ; very large WAD download
 3644742552 ; zp_hydro
 3652506149 ; zp_party
 3653037816 ; zp_polar

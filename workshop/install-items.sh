@@ -28,9 +28,25 @@ ${STEAMCMD_DIR}/steamcmd.sh \
   +logout \
   +quit
 
-# Copy all workshop content into the game directory, preserving subdirectory structure
+# Collect all WADs across all workshop items first
+all_wads=()
+while IFS= read -r wad; do
+  all_wads+=("zp/$(basename "$wad")")
+done < <(find "${SERVER_DIR}/steamapps/workshop/content/${APP_ID}" -maxdepth 2 -name "*.wad")
+
+# Copy all workshop content into the game directory
 for item_dir in ${SERVER_DIR}/steamapps/workshop/content/${APP_ID}/*/; do
   cp -r "${item_dir}." "${SERVER_DIR}/zp/"
+done
+
+# For every map, add all workshop WADs to its .res file
+for bsp in "${SERVER_DIR}/zp/maps/"*.bsp; do
+  [[ -f "$bsp" ]] || continue
+  map=$(basename "$bsp" .bsp)
+  res_file="${SERVER_DIR}/zp/maps/${map}.res"
+  for wad in "${all_wads[@]}"; do
+    grep -qxF "$wad" "$res_file" 2>/dev/null || echo "$wad" >> "$res_file"
+  done
 done
 
 # Add all the maps to the rotation and maplist
