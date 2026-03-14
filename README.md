@@ -98,3 +98,11 @@ sv_downloadurl "http://YOUR_SERVER_IP:8080/"
 ```
 
 The trailing slash is required.
+
+## License
+
+This project is licensed under the [GNU General Public License v3.0](LICENSE).
+
+## Contact
+
+Ty Porter — tyler.b.porter@gmail.com
