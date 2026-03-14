@@ -35,7 +35,7 @@ for item_dir in ${SERVER_DIR}/steamapps/workshop/content/${APP_ID}/*/; do
   # For each BSP in this item, create a .res file listing any WADs bundled with it
   wads=()
   while IFS= read -r wad; do
-    wads+=("zp/$(basename "$wad")")
+    wads+=($(basename "$wad"))
   done < <(find "$item_dir" -maxdepth 1 -name "*.wad")
 
   if [[ ${#wads[@]} -gt 0 ]]; then
