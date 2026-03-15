@@ -30,6 +30,7 @@ RUN dpkg --add-architecture i386 && \
         bash \
         tar \
         xz-utils \
+        nano \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /opt/steam
