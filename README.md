@@ -13,7 +13,7 @@ git clone https://github.com/ty-porter/zpds-docker.git
 
 docker compose --build
 
-./populate-host.
+./populate-host.sh
 ```
 
 ## Start the Server
@@ -26,10 +26,10 @@ docker compose up -d
 
 ```sh
 # Server logs
-docker logs -tf zpds-zp-server-1
+docker logs -tf zpds-docker-zp-server-1
 
 # FastDL nginx logs
-docker logs -tf zpds-fastdl-1
+docker logs -tf zpds-docker-fastdl-1
 ```
 
 ## Plugins

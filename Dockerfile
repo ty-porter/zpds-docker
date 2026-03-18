@@ -2,7 +2,8 @@
 FROM ubuntu:24.04
 
 ENV GAME=zp
-ENV APP_ID=4523420
+ENV SERVER_APP_ID=4523420
+ENV CLIENT_APP_ID=3825360
 
 # Internal Directories
 ENV BASE_DIR=/opt/steam
@@ -29,7 +30,6 @@ RUN dpkg --add-architecture i386 && \
         tar \
         xz-utils \
         nano \
-        dos2unix \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /opt/steam
@@ -44,22 +44,20 @@ RUN curl -sL "https://repo.steampowered.com/steamrt-images-scout/snapshots/lates
     | tar xvJ --no-same-owner && \
     ./steam-runtime/setup.sh
 
-RUN useradd -m -s /bin/bash steam
-
 # Install game server
 RUN ${STEAMCMD_DIR}/steamcmd.sh \
         +@sSteamCmdForcePlatformType linux \
         +force_install_dir ${SERVER_DIR} \
         +login anonymous \
-        +app_set_config ${APP_ID} mod ${GAME} \
-        +app_update ${APP_ID} validate \
+        +app_update ${SERVER_APP_ID} validate \
         +logout \
         +quit
 
 # Set up Steam client SDKs & app IDs
-RUN mkdir -p /home/steam/.steam/sdk32 && \
+RUN mkdir -p /home/steam/.steam/sdk32 /root/.steam/sdk32 && \
     cp ${STEAMCMD_DIR}/linux32/steamclient.so /home/steam/.steam/sdk32/steamclient.so && \
-    printf '%s\n' "${APP_ID}" > ${SERVER_DIR}/steam_appid.txt && \
+    cp ${STEAMCMD_DIR}/linux32/steamclient.so /root/.steam/sdk32/steamclient.so && \
+    printf '%s\n' "${CLIENT_APP_ID}" > ${SERVER_DIR}/steam_appid.txt && \
     chmod 444 ${SERVER_DIR}/steam_appid.txt
 
 # Install Metamod-P into server addons
@@ -84,8 +82,7 @@ RUN mkdir -p ${SERVER_DIR}/tmp && \
 COPY entrypoint.sh /entrypoint.sh
 COPY server.cfg.seed ${SERVER_DIR}/zp/server.cfg
 
-RUN chmod +x /entrypoint.sh && \
-    chown -R steam:steam ${SERVER_DIR} /home/steam/.steam
+RUN chmod +x /entrypoint.sh
 
 WORKDIR /opt/steam/server
 

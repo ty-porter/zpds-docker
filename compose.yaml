@@ -11,7 +11,6 @@ services:
   zp-server:
     build:
       context: .
-    user: steam
     command:
       - -console -game zp +port 27016 +maxplayers 16 -secure +map zp_thelabs -wadautodetect
     ports:
@@ -19,6 +18,8 @@ services:
       - "27015:27015/tcp"
       - "27005:27005/udp"
       - "26900:26900/udp"
+    cap_add:
+      - CAP_LINUX_IMMUTABLE
     volumes:
       - ./server:/opt/steam/server
     restart: unless-stopped

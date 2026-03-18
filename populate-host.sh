@@ -8,7 +8,7 @@ DEST=./server
 
 echo "Extracting server files to '${DEST}'..."
 mkdir -p "${DEST}"
-CONTAINER=$(docker create zpds-zp-server)
+CONTAINER=$(docker create zpds-docker-zp-server)
 docker cp "${CONTAINER}:/opt/steam/server/." "${DEST}"
 docker rm "${CONTAINER}"
 
