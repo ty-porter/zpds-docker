@@ -81,6 +81,7 @@ RUN mkdir -p ${SERVER_DIR}/tmp && \
 
 COPY entrypoint.sh /entrypoint.sh
 COPY server.cfg.seed ${SERVER_DIR}/zp/server.cfg
+COPY scripts/ ${SERVER_DIR}/scripts
 
 RUN chmod +x /entrypoint.sh
 

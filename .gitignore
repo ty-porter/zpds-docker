@@ -1,15 +1,5 @@
-# Environment secrets
-.env
-
-# Custom server configuration
-server.cfg
-
-# Arbitrary AMX Mod X configurations
-amxmodx/configs/*.ini
-amxmodx/configs/*.cfg
-
 # Selected workshop items
-workshop/items.txt
+scripts/workshop/items.txt
 
 tmp/
 do/
