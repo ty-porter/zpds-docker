@@ -5,65 +5,42 @@ Docker setup for running a [Zombie Panic!](https://store.steampowered.com/app/38
 ## Requirements
 
 - Docker
-- A Steam account with HL1 and Zombie Panic! required — anonymous login does NOT work!
 
----------------
-> [!WARNING]  
-> Your Steam account must have Steam Guard disabled. This is inherently dangerous. Use it at your own risk!
----------------
+## Setup / Installation
 
-## Setup
+```sh
+git clone https://github.com/ty-porter/zpds-docker.git
 
-### Environment Variables
+docker compose --build
 
-Copy `.env.sample` to `.env` and fill in your values:
-
-```bash
-cp .env.sample .env
+./populate-host.
 ```
 
-| Variable         | Description                           | Default   | Secret?            |
-|------------------|---------------------------------------|-----------|--------------------|
-| `STEAM_USERNAME` | Steam username                        | REQUIRED  | :heavy_check_mark: |
-| `STEAM_PASSWORD` | Steam password                        | REQUIRED  | :heavy_check_mark: |
-| `SV_PASSWORD`    | Server password                       | `""`      | :heavy_check_mark: |
-| `RCON_PASSWORD`  | RCON password (server administration) | `""`      | :heavy_check_mark: |
-| `GAME`           | Game mod directory name               | `zp`      |                    |
-| `APP_ID`         | Steam App ID for the dedicated server | `3825360` |                    |
+## Start the Server
 
-### Server Config
-
-Copy `server.cfg.sample` to `server.cfg` and fill in values:
-
-```bash
-cp server.cfg.sample server.cfg
+```sh
+docker compose up -d
 ```
 
-### Metamod-P / AMX Mod X Config
+### Tailing Logs
+
+```sh
+# Server logs
+docker logs -tf zpds-zp-server-1
+
+# FastDL nginx logs
+docker logs -tf zpds-fastdl-1
+```
+
+## Plugins
+
+### Metamod-P / AMX Mod X
 
 The server installs Metamod-P by default and runs AMX Mod X as a plugin.
 
-You can supply `.ini` or `.cfg` files (such as to enable server administrators) for AMX Mod X in `amxmodx/configs` which will be copied to the correct AMX Mod X directories.
-
 See https://www.amxmodx.org/ for details.
 
-## Usage
-
-### Building from source
-
-Credentials are passed as Docker build secrets and are never stored in the image. Docker Compose loads `.env` automatically.
-
-```bash
-docker compose up --build
-```
-
-### Using a pre-built image
-
-If you have a pre-built image (e.g. pulled from a registry), use `compose.prebuilt.yaml` — no Steam credentials required:
-
-```bash
-IMAGE=your-registry/zpds:latest docker compose -f compose.prebuilt.yaml up
-```
+## Networking
 
 The server runs on the following ports:
 
@@ -78,14 +55,6 @@ The server runs on the following ports:
 ## Configuration
 
 Edit `server.cfg` to change server name, passwords, map rotation, and other settings before building the image.
-
-## Verify the server is running
-
-```bash
-python query-server.py
-```
-
-Sends an A2S_INFO query to `127.0.0.1:27015` and prints the response.
 
 ## FastDL
 

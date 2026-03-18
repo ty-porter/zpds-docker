@@ -1,18 +1,16 @@
 # syntax=docker/dockerfile:1
 FROM ubuntu:24.04
 
-# Default game information -- this likely never needs to change!
-ARG GAME=zp
-ARG APP_ID=3825360
+ENV GAME=zp
+ENV APP_ID=4523420
 
-ENV GAME=${GAME}
-ENV APP_ID=${APP_ID}
-
-# Directories
+# Internal Directories
 ENV BASE_DIR=/opt/steam
 ENV STEAMCMD_DIR=${BASE_DIR}/steamcmd
 ENV STEAM_RUNTIME_DIR=${BASE_DIR}/steam-runtime
 ENV SERVER_DIR=${BASE_DIR}/server
+
+# Addons directories
 ENV ADDONS_DIR=${SERVER_DIR}/zp/addons
 ENV METAMOD_DIR=${ADDONS_DIR}/metamod
 ENV AMXMODX_DIR=${ADDONS_DIR}/amxmodx
@@ -31,6 +29,7 @@ RUN dpkg --add-architecture i386 && \
         tar \
         xz-utils \
         nano \
+        dos2unix \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /opt/steam
@@ -47,13 +46,11 @@ RUN curl -sL "https://repo.steampowered.com/steamrt-images-scout/snapshots/lates
 
 RUN useradd -m -s /bin/bash steam
 
-# Install game server using build secrets
-RUN --mount=type=secret,id=steam_username \
-    --mount=type=secret,id=steam_password \
-    ${STEAMCMD_DIR}/steamcmd.sh \
+# Install game server
+RUN ${STEAMCMD_DIR}/steamcmd.sh \
         +@sSteamCmdForcePlatformType linux \
         +force_install_dir ${SERVER_DIR} \
-        +login "$(cat /run/secrets/steam_username)" "$(cat /run/secrets/steam_password)" \
+        +login anonymous \
         +app_set_config ${APP_ID} mod ${GAME} \
         +app_update ${APP_ID} validate \
         +logout \
@@ -76,7 +73,7 @@ RUN mkdir -p ${ADDONS_DIR} ${SERVER_DIR}/tmp ${METAMOD_DIR}/dlls && \
     printf 'gamedll %s/zp/dlls/zp.so' ${SERVER_DIR} > ${METAMOD_DIR}/config.ini
 
 # Install AMX Mod X into server addons
-RUN mkdir -p ${ADDONS_DIR} ${SERVER_DIR}/tmp && \
+RUN mkdir -p ${SERVER_DIR}/tmp && \
     curl -sL https://www.amxmodx.org/amxxdrop/1.10/amxmodx-1.10.0-git5474-base-linux.tar.gz \
     | tar -C ${SERVER_DIR}/tmp -zxvf - && \
     cp -r ${SERVER_DIR}/tmp/addons/amxmodx ${ADDONS_DIR} && \
@@ -84,27 +81,11 @@ RUN mkdir -p ${ADDONS_DIR} ${SERVER_DIR}/tmp && \
     touch ${METAMOD_DIR}/plugins.ini && \
     printf "linux %s/dlls/amxmodx_mm_i386.so" ${AMXMODX_DIR} > ${METAMOD_DIR}/plugins.ini
 
-COPY amxmodx/configs ${AMXMODX_DIR}/configs
 COPY entrypoint.sh /entrypoint.sh
-COPY server.cfg /server.cfg
+COPY server.cfg.seed ${SERVER_DIR}/zp/server.cfg
 
-RUN --mount=type=secret,id=rcon_password \
-    --mount=type=secret,id=sv_password \
-    sed -i "s|{{RCON_PASSWORD}}|$(cat /run/secrets/rcon_password)|g" /server.cfg && \
-    sed -i "s|{{SV_PASSWORD}}|$(cat /run/secrets/sv_password)|g" /server.cfg
-
-COPY workshop/ workshop/
-
-# Copy the server config
-RUN cp /server.cfg ${SERVER_DIR}/zp/server.cfg && \
-    ln -sf zp/server.cfg ${SERVER_DIR}/startup_server.cfg && \
-    chmod +x /entrypoint.sh workshop/install-items.sh && \
-    # Create the workshop items file if one isn't created.
-    touch workshop/items.txt
-
-RUN chown -R steam:steam ${SERVER_DIR} /home/steam/.steam
-
-USER steam
+RUN chmod +x /entrypoint.sh && \
+    chown -R steam:steam ${SERVER_DIR} /home/steam/.steam
 
 WORKDIR /opt/steam/server
 

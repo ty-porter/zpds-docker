@@ -1,44 +1,24 @@
-secrets:
-  steam_username:
-    environment: STEAM_USERNAME
-  steam_password:
-    environment: STEAM_PASSWORD
-  sv_password:
-    environment: SV_PASSWORD
-  rcon_password:
-    environment: RCON_PASSWORD
-
 services:
   fastdl:
     image: nginx:alpine
     ports:
       - "8080:80"
     volumes:
-      - server-data:/opt/steam/server:ro
+      - ./server:/opt/steam/server:ro
       - ./fastdl/nginx.conf:/etc/nginx/conf.d/default.conf:ro
     restart: unless-stopped
 
   zp-server:
     build:
       context: .
-      args:
-        GAME: ${GAME:-zp}
-        APP_ID: ${APP_ID:-3825360}
-      secrets:
-        - steam_username
-        - steam_password
-        - rcon_password
-        - sv_password
+    user: steam
     command:
-      - -game zp +port 27016 +maxplayers 16 -secure +map zp_thelabs -wadautodetect
+      - -console -game zp +port 27016 +maxplayers 16 -secure +map zp_thelabs -wadautodetect
     ports:
       - "27016:27016/udp"
       - "27015:27015/tcp"
       - "27005:27005/udp"
       - "26900:26900/udp"
     volumes:
-      - server-data:/opt/steam/server
+      - ./server:/opt/steam/server
     restart: unless-stopped
-
-volumes:
-  server-data:

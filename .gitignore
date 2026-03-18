@@ -13,3 +13,8 @@ workshop/items.txt
 
 tmp/
 do/
+
+# Server files (populated at runtime via bind mount)
+server/
+
+.claude
