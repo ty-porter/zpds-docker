@@ -1,6 +1,6 @@
 # zpds — Zombie Panic! Dedicated Server
 
-![](https://img.shields.io/badge/Zombie_Panic!-1.1a-blue)
+![](https://img.shields.io/badge/platform-linux-blue) ![](https://img.shields.io/badge/Zombie_Panic!-1.1a-blue)
 
 Docker setup for running a [Zombie Panic!](https://store.steampowered.com/app/3825360/) dedicated server via SteamCMD.
 
