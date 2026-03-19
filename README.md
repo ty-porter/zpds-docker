@@ -1,5 +1,7 @@
 # zpds — Zombie Panic! Dedicated Server
 
+![](https://img.shields.io/badge/Zombie_Panic!-1.1a-blue)
+
 Docker setup for running a [Zombie Panic!](https://store.steampowered.com/app/3825360/) dedicated server via SteamCMD.
 
 ## Requirements
@@ -38,7 +40,9 @@ docker logs -tf zpds-docker-fastdl-1
 
 The server installs Metamod-P by default and runs AMX Mod X as a plugin.
 
-See https://www.amxmodx.org/ for details.
+Metamod-P source code and documentation is available [here](https://github.com/Bots-United/metamod-p).
+
+AMX Mod X documentation is available [here](https://www.amxmodx.org/).
 
 ## Networking
 
@@ -54,19 +58,34 @@ The server runs on the following ports:
 
 ## Configuration
 
-Edit `server.cfg` to change server name, passwords, map rotation, and other settings before building the image.
+Full configuration guides are beyond what can be provided in this README.
 
-## FastDL
+Check out the [ZP! Dedicated Server setup guide](https://steamcommunity.com/sharedfiles/filedetails/?id=3670107945) for general guidance.
+
+Some common configuration that is generally useful:
+
+* `server/zp/server.cfg`:
+  - Set an `rcon_password` for server administration
+  - Set `sv_password` for a server password
+
+* `server/zp/addons/amxmodx/configs/users.ini`
+  - Set a server administrator via SteamID
+
+### FastDL
 
 A FastDL service (nginx) is included and starts alongside the game server. It serves the game content directory over HTTP on port 8080, allowing clients to download custom maps, models, and sounds without impacting server performance.
 
-To enable it, set `sv_downloadurl` in `server.cfg` before building:
+To enable it, set `sv_downloadurl` in `server/zp/server.cfg`:
 
 ```
 sv_downloadurl "http://YOUR_SERVER_IP:8080/"
 ```
 
 The trailing slash is required.
+
+### Workshop Items
+
+See [the Workshop README](/scripts/workshop/README.md) for details on how to install workshop items.
 
 ## License
 

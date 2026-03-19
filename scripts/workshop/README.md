@@ -2,6 +2,8 @@
 
 These scripts are intended to be ran from within the Docker container.
 
+Downloading from Steam Workshop requires a valid Steam username and password.
+
 ## Create `server/workshop`
 
 Create the `server` directory if you haven't already:
@@ -23,5 +25,5 @@ cp scripts/workshop/items.txt.sample server/workshop/items.txt
 ## Run Workshop Install
 
 ```sh
-docker compose run --rm --entrypoint scripts/workshop/install-all.sh zpds-docker-zp-server-1
+docker compose run --rm --entrypoint scripts/workshop/install-all.sh zpds-docker-zp-server-1 <username> <password>
 ```
