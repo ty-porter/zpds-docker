@@ -15,7 +15,7 @@ git clone https://github.com/ty-porter/zpds-docker.git
 
 docker compose --build
 
-./populate-host.sh
+./scripts/populate-host.sh
 ```
 
 ## Start the Server
@@ -57,6 +57,8 @@ The server runs on the following ports:
 | 8080  | TCP      | FastDL (HTTP)   |
 
 ## Configuration
+
+Once you've built a container and run `./scripts/populate_host.sh`, the server files will be mounted on the host at `server/`. You can edit these files on the host and see changes propagate to your server after restart.
 
 Full configuration guides are beyond what can be provided in this README.
 
