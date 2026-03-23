@@ -12,7 +12,7 @@ services:
     build:
       context: .
     command:
-      - -console -game zp -condebug +port 27016 +maxplayers 16 -secure +map zp_thelabs -wadautodetect
+      - -console -game zp -condebug -debug +port 27016 +maxplayers 16 -secure +map zp_thelabs -wadautodetect
     ports:
       - "27016:27016/udp"
       - "27015:27015/tcp"
